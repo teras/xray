@@ -4,28 +4,104 @@
     <groupId>com.panayotis</groupId>
     <artifactId>xray</artifactId>
     <version>0.0.0.1</version>
-    <packaging>jar</packaging>
+    <name>XRay</name>
+    <description>XRay is a java pre-wrapper to have access to a live Java executable</description>
+    <url>https://github.com/teras/xray</url>
+
     <dependencies>
         <dependency>
-            <groupId>asm</groupId>
-            <artifactId>asm</artifactId>
-            <version>1.4.3</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>com.panayotis</groupId>
             <artifactId>hrgui</artifactId>
-            <version>${project.version}</version>
+            <version>0.1</version>
         </dependency>
         <dependency>
-            <groupId>org.antlr</groupId>
-            <artifactId>antlr4-runtime</artifactId>
-            <version>4.5.3</version>
-            <scope>provided</scope>
+            <groupId>org.beanshell</groupId>
+            <artifactId>bsh</artifactId>
+            <version>2.0b4</version>
+            <type>jar</type>
         </dependency>
     </dependencies>
 
+    <licenses>
+        <license>
+            <name>GNU Lesser General Public License, Version 2</name>
+            <url>https://www.gnu.org/licenses/lgpl-2.0.html</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Panayotis Katsaloulis</name>
+            <email>panayotis@panayotis.com</email>
+            <organizationUrl>http://www.panayotis.com</organizationUrl>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git://github.com/teras/xray.git</connection>
+        <developerConnection>scm:git:ssh://github.com/teras/xray.git</developerConnection>
+        <url>http://github.com/teras/hrgui/tree/master</url>
+    </scm>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
+    
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.8</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.0.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.10.4</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.6</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -37,27 +113,6 @@
                         </manifest>
                     </archive>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.antlr</groupId>
-                <artifactId>antlr4-maven-plugin</artifactId>
-                <version>4.5.3</version>
-                <configuration>
-                    <outputDirectory>src/main/java/com/panayotis/xray/antlr</outputDirectory>
-                    <treatWarningsAsErrors>true</treatWarningsAsErrors>
-                    <arguments>
-                        <argument>-package</argument>
-                        <argument>com.panayotis.xray.antlr</argument>
-                    </arguments>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>antlr</id>
-                        <goals>
-                            <goal>antlr4</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

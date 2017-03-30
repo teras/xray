@@ -95,8 +95,8 @@ public class IOPlugin extends javax.swing.JPanel implements XRayPlugin {
         if (bothS.getParent() != null)
             bothS.getParent().remove(bothS);
         JComponent v = output.isSelected()
-            ? outS
-            : (error.isSelected()
+                ? outS
+                : (error.isSelected()
                 ? errorS
                 : bothS);
         viewport.add(v, BorderLayout.CENTER);
