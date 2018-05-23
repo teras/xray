@@ -1,1 +1,4 @@
 /target/
+/xray/target/
+/xray-awt/target/
+/xray-io/target/
