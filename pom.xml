@@ -8,6 +8,7 @@
 
     <name>XRay Project</name>
     <url>https://github.com/teras/xray</url>
+    <description>XRay is a java agent to modify live and on the fly GUI Java applications</description>
 
     <modules>
         <module>xray</module>
