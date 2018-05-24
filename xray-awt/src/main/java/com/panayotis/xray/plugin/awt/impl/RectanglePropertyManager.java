@@ -5,8 +5,8 @@
  */
 package com.panayotis.xray.plugin.awt.impl;
 
-import com.panayotis.xray.props.visuals.DoubleNumberPropertyVisuals;
 import com.panayotis.xray.props.PropertyManager;
+import com.panayotis.xray.props.visuals.DoubleNumberPropertyVisuals;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.Rectangle;
@@ -17,8 +17,8 @@ import javax.swing.JPanel;
 
 public class RectanglePropertyManager extends PropertyManager<Rectangle> {
 
-    private final DoubleNumberPropertyVisuals location;
-    private final DoubleNumberPropertyVisuals size;
+    private final DoubleNumberPropertyVisuals<Integer> location;
+    private final DoubleNumberPropertyVisuals<Integer> size;
     private final JPanel visuals;
     private int x, y, width, height;
 
@@ -26,14 +26,14 @@ public class RectanglePropertyManager extends PropertyManager<Rectangle> {
         super(instance, name, setter, getter);
         visuals = new JPanel(new BorderLayout());
 
-        location = new DoubleNumberPropertyVisuals();
+        location = new DoubleNumberPropertyVisuals<>(Integer.MIN_VALUE, Integer.MAX_VALUE);
         location.setEnabled(!isReadOnly());
-        location.addListener((gx, gy) -> setValue(new Rectangle(this.x = gx.intValue(), this.y = gy.intValue(), width, height)), false);
+        location.addListener((gx, gy) -> setValue(new Rectangle(this.x = gx.intValue(), this.y = gy.intValue(), width, height)));
         location.setLabelName("  Location");
 
-        size = new DoubleNumberPropertyVisuals();
+        size = new DoubleNumberPropertyVisuals<>(0, Integer.MAX_VALUE);
         size.setEnabled(!isReadOnly());
-        size.addListener((gwidth, gheight) -> setValue(new Rectangle(x, y, this.width = gwidth.intValue(), this.height = gheight.intValue())), false);
+        size.addListener((gwidth, gheight) -> setValue(new Rectangle(x, y, this.width = gwidth.intValue(), this.height = gheight.intValue())));
         size.setLabelName("  Size");
 
         JLabel nameL = new JLabel(name);

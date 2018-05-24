@@ -5,21 +5,21 @@
  */
 package com.panayotis.xray.plugin.awt.impl;
 
-import com.panayotis.xray.props.visuals.DoubleNumberPropertyVisuals;
 import com.panayotis.xray.props.PropertyManager;
+import com.panayotis.xray.props.visuals.DoubleNumberPropertyVisuals;
 import java.awt.Point;
 import java.lang.reflect.Method;
 import javax.swing.JComponent;
 
 public class PointPropertyManager extends PropertyManager<Point> {
 
-    private final DoubleNumberPropertyVisuals visuals;
+    private final DoubleNumberPropertyVisuals<Integer> visuals;
 
     public PointPropertyManager(Object instance, String name, Method setter, Method getter) {
         super(instance, name, setter, getter);
-        visuals = new DoubleNumberPropertyVisuals();
+        visuals = new DoubleNumberPropertyVisuals<>(Integer.MIN_VALUE, Integer.MAX_VALUE);
         visuals.setEnabled(!isReadOnly());
-        visuals.addListener((x, y) -> setValue(new Point(x.intValue(), y.intValue())), false);
+        visuals.addListener((x, y) -> setValue(new Point(x.intValue(), y.intValue())));
         visuals.setLabelName(name);
     }
 

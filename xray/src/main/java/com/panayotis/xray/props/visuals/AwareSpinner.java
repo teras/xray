@@ -16,16 +16,17 @@ import javax.swing.event.ChangeListener;
 /**
  *
  * @author teras
+ * @param <N>
  */
-public class AwareSpinner extends JPanel {
+public class AwareSpinner<N extends Number & Comparable<N>> extends JPanel {
 
     private final JSpinner spinner;
     private final SpinnerNumberModel model;
 
     @SuppressWarnings("OverridableMethodCallInConstructor")
-    public AwareSpinner(int min, int max) {
+    public AwareSpinner(N min, N max) {
         super(new BorderLayout());
-        spinner = new JSpinner(model = new SpinnerNumberModel(0, min, max, 1));
+        spinner = new JSpinner(model = new SpinnerNumberModel(num(min, 0), min, max, num(min, 1)));
         spinner.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -37,12 +38,12 @@ public class AwareSpinner extends JPanel {
         setBackground(AwareDefaults.DIRTY);
     }
 
-    public int getValue() {
-        return model.getNumber().intValue();
+    public N getValue() {
+        return (N) model.getNumber();
     }
 
     public void setValue(Number n) {
-        model.setValue(n.intValue());
+        model.setValue(n);
     }
 
     @Override
@@ -55,4 +56,20 @@ public class AwareSpinner extends JPanel {
         spinner.addChangeListener(listener);
     }
 
+    private Number num(N number, int basenum) {
+        if (number instanceof Byte)
+            return (byte) basenum;
+        else if (number instanceof Short)
+            return (short) basenum;
+        else if (number instanceof Integer)
+            return basenum;
+        else if (number instanceof Long)
+            return (long) basenum;
+        else if (number instanceof Float)
+            return (float) basenum;
+        else if (number instanceof Double)
+            return (double) basenum;
+        else
+            return null;
+    }
 }

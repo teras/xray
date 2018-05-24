@@ -5,21 +5,21 @@
  */
 package com.panayotis.xray.plugin.awt.impl;
 
-import com.panayotis.xray.props.visuals.DoubleNumberPropertyVisuals;
 import com.panayotis.xray.props.PropertyManager;
+import com.panayotis.xray.props.visuals.DoubleNumberPropertyVisuals;
 import java.awt.Dimension;
 import java.lang.reflect.Method;
 import javax.swing.JComponent;
 
 public class DimensionPropertyManager extends PropertyManager<Dimension> {
 
-    private final DoubleNumberPropertyVisuals visuals;
+    private final DoubleNumberPropertyVisuals<Integer> visuals;
 
     public DimensionPropertyManager(Object instance, String name, Method setter, Method getter) {
         super(instance, name, setter, getter);
-        visuals = new DoubleNumberPropertyVisuals();
+        visuals = new DoubleNumberPropertyVisuals(0, Integer.MAX_VALUE);
         visuals.setEnabled(!isReadOnly());
-        visuals.addListener((width, height) -> setValue(new Dimension(width.intValue(), height.intValue())), false);
+        visuals.addListener((width, height) -> setValue(new Dimension(width.intValue(), height.intValue())));
         visuals.setLabelName(name);
     }
 

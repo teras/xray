@@ -13,18 +13,19 @@ import javax.swing.JPanel;
 /**
  *
  * @author teras
+ * @param <N>
  */
-public class DoubleNumberPropertyVisuals extends JPanel {
+public class DoubleNumberPropertyVisuals<N extends Number & Comparable<N>> extends JPanel {
 
-    private final AwareSpinner num1;
-    private final AwareSpinner num2;
+    private final AwareSpinner<N> num1;
+    private final AwareSpinner<N> num2;
     private final JLabel name;
 
     @SuppressWarnings("OverridableMethodCallInConstructor")
-    public DoubleNumberPropertyVisuals() {
+    public DoubleNumberPropertyVisuals(N min, N max) {
         name = new JLabel();
-        num1 = new AwareSpinner(Integer.MIN_VALUE, Integer.MAX_VALUE);
-        num2 = new AwareSpinner(Integer.MIN_VALUE, Integer.MAX_VALUE);
+        num1 = new AwareSpinner(min, max);
+        num2 = new AwareSpinner(min, max);
 
         JPanel numP = new JPanel(new GridLayout(1, 2));
         numP.add(num1);
@@ -51,7 +52,7 @@ public class DoubleNumberPropertyVisuals extends JPanel {
         num2.setEnabled(enabled);
     }
 
-    public void addListener(BiConsumer<Number, Number> eventConsumer, boolean asDecimal) {
+    public void addListener(BiConsumer<Number, Number> eventConsumer) {
         num1.addChangeListener(e -> eventConsumer.accept(num1.getValue(), num2.getValue()));
         num2.addChangeListener(e -> eventConsumer.accept(num1.getValue(), num2.getValue()));
     }
