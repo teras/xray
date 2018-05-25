@@ -7,25 +7,25 @@ package com.panayotis.xray.props.commons;
 
 import java.lang.reflect.Method;
 
-public class LongPropertyManager extends GenericPropertyManager<Integer> {
+public class LongPropertyManager extends GenericPropertyManager<Long> {
 
     public LongPropertyManager(Object instance, String name, Method setter, Method getter) {
         super(instance, name, setter, getter);
     }
 
     @Override
-    protected Integer convertValue(Object value) {
+    protected Long convertValue(Object value) {
         try {
             if (value != null)
-                return Integer.valueOf(value.toString());
+                return Long.valueOf(value.toString());
         } catch (NumberFormatException ex) {
         }
         return null;
     }
 
     @Override
-    public Integer defaultValue() {
-        return 0;
+    public Long defaultValue() {
+        return 0l;
     }
 
 }

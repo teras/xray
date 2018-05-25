@@ -43,12 +43,12 @@ public class AWTPlugin extends PropertyTreePlugin<Component> {
     public AWTPlugin() {
         super(new AWTModel(), "AWT", new PropertyManagerFactory());
         PropertyManagerFactory factory = getFactory();
-        factory.register(Dimension.class, (instance, name, setter, getter) -> new DimensionPropertyManager(instance, name, setter, getter));
-        factory.register(Point.class, (instance, name, setter, getter) -> new PointPropertyManager(instance, name, setter, getter));
-        factory.register(Rectangle.class, (instance, name, setter, getter) -> new RectanglePropertyManager(instance, name, setter, getter));
-        factory.register(Image.class, (instance, name, setter, getter) -> new ImagePropertyManager(instance, name, setter, getter));
-        factory.register(Icon.class, (instance, name, setter, getter) -> new IconPropertyManager(instance, name, setter, getter));
-        factory.register(Color.class, (instance, name, setter, getter) -> new ColorPropertyManager(instance, name, setter, getter));
+        factory.register(Dimension.class, DimensionPropertyManager.class);
+        factory.register(Point.class, PointPropertyManager.class);
+        factory.register(Rectangle.class, RectanglePropertyManager.class);
+        factory.register(Image.class, ImagePropertyManager.class);
+        factory.register(Icon.class, IconPropertyManager.class);
+        factory.register(Color.class, ColorPropertyManager.class);
 
         flashButton = new JToggleButton(new ImageIcon(getClass().getResource("/icons/flash.png")));
         flashButton.addActionListener(e -> flashComponent());

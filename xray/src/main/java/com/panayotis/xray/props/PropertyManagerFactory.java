@@ -50,6 +50,17 @@ public class PropertyManagerFactory {
         this.recogn = recogn;
     }
 
+    @SuppressWarnings("UseSpecificCatch")
+    public <T> void register(Class<T> type, Class<? extends PropertyManager<T>> generator) {
+        resolv.register(type, (instance, name, setter, getter) -> {
+            try {
+                return generator.getConstructor(Object.class, String.class, Method.class, Method.class).newInstance(instance, name, setter, getter);
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+    }
+
     public <T> void register(Class<T> type, PropertyGenerator<T> generator) {
         resolv.register(type, generator);
     }
