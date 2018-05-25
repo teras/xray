@@ -9,8 +9,8 @@ import com.panayotis.xray.props.visuals.ConstrainedPanel;
 import java.awt.BorderLayout;
 import java.awt.Font;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.function.Supplier;
@@ -27,6 +27,7 @@ public class PropertyManagerFactory {
 
     private final PropertyResolver resolv;
     private final PropertyRecognizer recogn;
+    private final Map<Class, Map<String, PropMethod>> registry = new HashMap<>();
 
     public PropertyManagerFactory() {
         this(null, null);
@@ -66,30 +67,41 @@ public class PropertyManagerFactory {
         titlePanel.add(hash, BorderLayout.CENTER);
         panel.add(titlePanel);
 
-        for (PropertyManager p : retrieveList(instance)) {
+        Map<String, PropMethod> methods = retrieveList(instance);
+        for (String prop : methods.keySet()) {
+            PropMethod method = methods.get(prop);
+            PropertyManager pman = resolv.resolve(instance, recogn.getNameFromGetter(method.getter), method.setter, method.getter);
             JPanel constraint = new ConstrainedPanel(new BorderLayout());
-            constraint.add(p.getView(), BorderLayout.CENTER);
+            constraint.add(pman.getView(), BorderLayout.CENTER);
             panel.add(constraint);
         }
         return panel;
     }
 
-    private List<PropertyManager> retrieveList(Object instance) {
-        List<PropertyManager> props = new ArrayList<>();
-        Map<String, PropMethods> properties = new TreeMap<>();
+    private Map<String, PropMethod> retrieveList(Object instance) {
         Class cls = instance.getClass();
-        for (Method m : cls.getMethods())
-            if (recogn.isSetter(m))
-                getValue(properties, recogn.getNameFromSetter(m), () -> new PropMethods()).setter = m;
-            else if (recogn.isGetter(m))
-                getValue(properties, recogn.getNameFromGetter(m), () -> new PropMethods()).getter = m;
-        for (PropMethods methods : properties.values())
-            if (methods.getter != null)
-                props.add(resolv.resolve(instance, recogn.getNameFromGetter(methods.getter), methods.setter, methods.getter));
-        return props;
+        Map<String, PropMethod> objmap = registry.get(cls);
+        if (objmap == null) {
+            registry.put(cls, objmap = new TreeMap<>());
+            for (Method m : cls.getMethods())
+                if (recogn.isSetter(m))
+                    getValue(objmap, recogn.getNameFromSetter(m), () -> new PropMethod()).setter = m;
+                else if (recogn.isGetter(m))
+                    getValue(objmap, recogn.getNameFromGetter(m), () -> new PropMethod()).getter = m;
+
+            // Remove setter-only properties (should be invalid!)
+            Iterator<String> props = objmap.keySet().iterator();
+            while (props.hasNext()) {
+                String prop = props.next();
+                PropMethod method = objmap.get(prop);
+                if (method.getter == null)
+                    props.remove();
+            }
+        }
+        return objmap;
     }
 
-    static class PropMethods {
+    static class PropMethod {
 
         private Method getter;
         private Method setter;
