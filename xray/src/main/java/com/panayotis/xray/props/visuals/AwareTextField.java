@@ -41,6 +41,7 @@ public class AwareTextField extends JPanel {
 
     public void setText(String text) {
         field.setText(text);
+        field.setCaretPosition(0);
     }
 
     @Override
