@@ -5,61 +5,18 @@
  */
 package com.panayotis.xray.plugin.awt.impl;
 
-import com.panayotis.xray.props.PropertyManager;
-import com.panayotis.xray.props.visuals.DoubleNumberPropertyVisuals;
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
+import com.panayotis.xray.props.commons.NumericQuadPropertyManager;
 import java.awt.Rectangle;
 import java.lang.reflect.Method;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 
-public class RectanglePropertyManager extends PropertyManager<Rectangle> {
+public class RectanglePropertyManager extends NumericQuadPropertyManager<Integer, Rectangle> {
 
-    private final DoubleNumberPropertyVisuals<Integer> location;
-    private final DoubleNumberPropertyVisuals<Integer> size;
-    private final JPanel visuals;
-    private int x, y, width, height;
 
     public RectanglePropertyManager(Object instance, String name, Method setter, Method getter) {
-        super(instance, name, setter, getter);
-        visuals = new JPanel(new BorderLayout());
-
-        location = new DoubleNumberPropertyVisuals<>(Integer.MIN_VALUE, Integer.MAX_VALUE);
-        location.setEnabled(!isReadOnly());
-        location.addListener((gx, gy) -> setValue(new Rectangle(this.x = gx.intValue(), this.y = gy.intValue(), width, height)));
-        location.setLabelName("  Location");
-
-        size = new DoubleNumberPropertyVisuals<>(0, Integer.MAX_VALUE);
-        size.setEnabled(!isReadOnly());
-        size.addListener((gwidth, gheight) -> setValue(new Rectangle(x, y, this.width = gwidth.intValue(), this.height = gheight.intValue())));
-        size.setLabelName("  Size");
-
-        JLabel nameL = new JLabel(name);
-        nameL.setEnabled(!isReadOnly());
-        visuals.add(nameL, BorderLayout.NORTH);
-        JPanel spinners = new JPanel(new GridLayout(2, 1));
-        spinners.add(location);
-        spinners.add(size);
-        visuals.add(spinners, BorderLayout.CENTER);
-    }
-
-    @Override
-    protected JComponent createView() {
-        return visuals;
-    }
-
-    @Override
-    public void updateView(Rectangle item) {
-        if (item != null) {
-            x = item.x;
-            y = item.y;
-            width = item.width;
-            height = item.height;
-            location.update(x, y);
-            size.update(width, height);
-        }
+        super(instance, name, setter, getter,
+                Integer.MIN_VALUE, Integer.MAX_VALUE, 0, Integer.MAX_VALUE, "Location", "Size",
+                (x, y, width, height)->new Rectangle(x, y, width, height), 
+                rect -> new Integer[]{rect.x, rect.y, rect.width, rect.height});
     }
 
     @Override

@@ -5,33 +5,14 @@
  */
 package com.panayotis.xray.plugin.awt.impl;
 
-import com.panayotis.xray.props.PropertyManager;
-import com.panayotis.xray.props.visuals.DoubleNumberPropertyVisuals;
+import com.panayotis.xray.props.commons.NumericPairPropertyManager;
 import java.awt.Dimension;
 import java.lang.reflect.Method;
-import javax.swing.JComponent;
 
-public class DimensionPropertyManager extends PropertyManager<Dimension> {
-
-    private final DoubleNumberPropertyVisuals<Integer> visuals;
+public class DimensionPropertyManager extends NumericPairPropertyManager<Integer, Dimension> {
 
     public DimensionPropertyManager(Object instance, String name, Method setter, Method getter) {
-        super(instance, name, setter, getter);
-        visuals = new DoubleNumberPropertyVisuals(0, Integer.MAX_VALUE);
-        visuals.setEnabled(!isReadOnly());
-        visuals.addListener((width, height) -> setValue(new Dimension(width.intValue(), height.intValue())));
-        visuals.setLabelName(name);
-    }
-
-    @Override
-    protected JComponent createView() {
-        return visuals;
-    }
-
-    @Override
-    public void updateView(Dimension item) {
-        if (item != null)
-            visuals.update(item.width, item.height);
+        super(instance, name, setter, getter, 0, Integer.MAX_VALUE, (w, h) -> new Dimension(w, h), dim -> new Integer[]{dim.width, dim.height});
     }
 
     @Override

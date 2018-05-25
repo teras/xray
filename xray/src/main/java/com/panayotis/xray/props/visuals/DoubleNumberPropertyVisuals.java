@@ -52,7 +52,7 @@ public class DoubleNumberPropertyVisuals<N extends Number & Comparable<N>> exten
         num2.setEnabled(enabled);
     }
 
-    public void addListener(BiConsumer<Number, Number> eventConsumer) {
+    public void addListener(BiConsumer<N, N> eventConsumer) {
         num1.addChangeListener(e -> eventConsumer.accept(num1.getValue(), num2.getValue()));
         num2.addChangeListener(e -> eventConsumer.accept(num1.getValue(), num2.getValue()));
     }
